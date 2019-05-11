@@ -7,29 +7,39 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
+import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.activity_main.*
 
 private const val PERMISSIONS = 100
 
-class MainActivity : AppCompatActivity() {
+class CallLogActivity : AppCompatActivity() {
+
+    private lateinit var viewModel: CallLogViewModel
+    private lateinit var adapter: CallLogAdapter
+    private var disposable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val test = CallLogRepository(applicationContext)
-        test.observeCallLog().subscribe ({
-            val x = it
-            val y = x
-        }, { t ->
-            if (t is SecurityException) {
-                checkPermissions()
-            }
-        })
+        adapter = CallLogAdapter()
+        recycler.adapter = adapter
+
+        viewModel = Provider.callLogViewModel
     }
 
     override fun onResume() {
         super.onResume()
 
+        disposable = viewModel.observeCallLog().subscribe {
+            adapter.setItems(it)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposable?.dispose()
     }
 
     private fun checkPermissions() {

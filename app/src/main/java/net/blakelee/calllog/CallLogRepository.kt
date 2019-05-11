@@ -6,24 +6,32 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.provider.CallLog.Calls
+import android.telephony.PhoneNumberUtils
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposables
+import java.text.SimpleDateFormat
 import java.util.*
+
+private const val DATE_FORMAT = "h:mm a M/d/yy"
 
 class CallLogRepository(private val context: Context) : CallLogInterface {
 
-   private fun createBroadcastReceiver(callback: () -> Unit) = object : BroadcastReceiver() {
+    private val sdf = SimpleDateFormat(DATE_FORMAT, Locale.US)
+
+    init {
+        sdf.timeZone = TimeZone.getDefault()
+    }
+
+    private fun createBroadcastReceiver(callback: () -> Unit) = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
             val phoneStateListener = object : PhoneStateListener() {
                 override fun onCallStateChanged(state: Int, phoneNumber: String?) {
-                    when(state) {
-                        TelephonyManager.CALL_STATE_IDLE -> { callback() }
-                        TelephonyManager.CALL_STATE_OFFHOOK -> {}
-                        TelephonyManager.CALL_STATE_RINGING -> {}
+                    if (state == TelephonyManager.CALL_STATE_IDLE) {
+                        callback()
                     }
                 }
             }
@@ -44,8 +52,8 @@ class CallLogRepository(private val context: Context) : CallLogInterface {
         val items = mutableListOf<CallDetails>()
 
         while(cursor.moveToNext()) {
-            val phoneNumber = cursor.getString(number)
-            val callDate = Date(cursor.getLong(date))
+            val phoneNumber = formatPhoneNumber(cursor.getString(number))
+            val callDate = sdf.format(Date(cursor.getLong(date)))
             val direction = when(cursor.getInt(type)) {
                 Calls.OUTGOING_TYPE -> "OUTGOING"
                 Calls.INCOMING_TYPE -> "INCOMING"
@@ -61,6 +69,12 @@ class CallLogRepository(private val context: Context) : CallLogInterface {
 
         cursor.close()
         return items
+    }
+
+    private fun formatPhoneNumber(phoneNumber: String): String {
+        return PhoneNumberUtils.formatNumberToE164(phoneNumber, Locale.US.country)
+            .takeLast(10)
+            .replaceFirst("(\\d{3})(\\d{3})(\\d+)".toRegex(), "$1-$2-$3")
     }
 
     override fun observeCallLog(): Observable<List<CallDetails>> {
