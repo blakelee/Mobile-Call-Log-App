@@ -55,13 +55,13 @@ class CallLogRepository(private val context: Context) : CallLog {
             val phoneNumber = formatPhoneNumber(cursor.getString(number))
             val callDate = sdf.format(Date(cursor.getLong(date)))
             val direction = when(cursor.getInt(type)) {
-                Calls.OUTGOING_TYPE -> "OUTGOING"
-                Calls.INCOMING_TYPE -> "INCOMING"
-                Calls.MISSED_TYPE -> "MISSED"
-                Calls.VOICEMAIL_TYPE -> "VOICEMAIL"
-                Calls.REJECTED_TYPE -> "REJECTED"
-                Calls.ANSWERED_EXTERNALLY_TYPE -> "ANSWERED EXTERNALLY"
-                else -> "UNKNOWN"
+                Calls.OUTGOING_TYPE -> "Outgoing"
+                Calls.INCOMING_TYPE -> "Incoming"
+                Calls.MISSED_TYPE -> "Missed"
+                Calls.VOICEMAIL_TYPE -> "Voicemail"
+                Calls.REJECTED_TYPE -> "Rejected"
+                Calls.ANSWERED_EXTERNALLY_TYPE -> "Answered Externally"
+                else -> "Unknown"
             }
 
             items.add(CallDetails(phoneNumber, callDate, direction))

@@ -20,7 +20,6 @@ class CallLogViewModel(app: App,
             }
 
             permissionsGranted.accept(hasPermissions)
-
         } else {
             permissionsGranted.accept(true)
         }
