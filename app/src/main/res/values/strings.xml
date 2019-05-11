@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Call Log</string>
+    <string name="enable_permissions">Enable Permissions</string>
 </resources>
