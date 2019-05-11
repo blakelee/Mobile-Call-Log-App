@@ -56,4 +56,10 @@ to the android system, I just skipped it altogether.
 
 I did make a MockCallLogRespository the could be used to simulate multiple new call logs coming in. I have used
 a mock model in the past to simulate an entire flow with all the events that would be expected in the real world.
+
+Another key consideration was observing the call log. The idea is that we only register the receiver when
+something is subscribed to it. When that subscription is disposed, we unregister the receiver. If this was used
+in multiple places I would consider changing the function to a private val, adding a share() to the end of it,
+and the observeCallLog() function would return the val we created. That way it doesn't register many receivers
+and just keeps the one.
 ```
