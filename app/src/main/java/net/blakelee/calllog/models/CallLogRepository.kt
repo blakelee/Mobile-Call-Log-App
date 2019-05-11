@@ -1,4 +1,4 @@
-package net.blakelee.calllog
+package net.blakelee.calllog.models
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
@@ -16,7 +16,7 @@ import java.util.*
 
 private const val DATE_FORMAT = "h:mm a M/d/yy"
 
-class CallLogRepository(private val context: Context) : CallLogInterface {
+class CallLogRepository(private val context: Context) : CallLog {
 
     private val sdf = SimpleDateFormat(DATE_FORMAT, Locale.US)
 

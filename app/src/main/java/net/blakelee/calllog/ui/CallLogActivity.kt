@@ -1,7 +1,6 @@
-package net.blakelee.calllog
+package net.blakelee.calllog.ui
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +11,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.net.Uri.fromParts
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import android.content.Intent
+import net.blakelee.calllog.viewmodels.CallLogViewModel
+import net.blakelee.calllog.R
+import net.blakelee.calllog.providers.Provider
 
 private const val PERMISSIONS = 100
 private const val REQUEST_PERMISSION_SETTING = 101
@@ -41,12 +43,16 @@ class CallLogActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (hasPermissions(this, *permissions)) {
-            observeCallLog()
-            permissionsButton.visibility = View.GONE
-        } else {
-            permissionsButton.visibility = View.VISIBLE
+        disposable = viewModel.permissionsGranted.subscribe { granted ->
+            if (granted) {
+                observeCallLog()
+                permissionsButton.visibility = View.GONE
+            } else {
+                permissionsButton.visibility = View.VISIBLE
+            }
         }
+
+        viewModel.checkPermissions(permissions)
     }
 
     override fun onPause() {
@@ -82,17 +88,7 @@ class CallLogActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == PERMISSIONS && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-            permissionsButton.visibility = View.GONE
-            observeCallLog()
-        } else {
-            permissionsButton.visibility = View.VISIBLE
-        }
-    }
-
-    private fun hasPermissions(context: Context, vararg permissions: String): Boolean = permissions.all {
-        ActivityCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+        viewModel.checkPermissions(permissions)
     }
 
     private fun openAppSettings() {

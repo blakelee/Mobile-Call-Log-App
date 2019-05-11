@@ -1,6 +1,8 @@
 package net.blakelee.calllog
 
 import android.app.Application
+import net.blakelee.calllog.providers.AppModelProvider
+import net.blakelee.calllog.providers.Provider
 
 class App : Application() {
 
@@ -8,6 +10,6 @@ class App : Application() {
         super.onCreate()
 
         val modelProvider = AppModelProvider(this)
-        Provider.onCreate(modelProvider)
+        Provider.onCreate(this, modelProvider)
     }
 }

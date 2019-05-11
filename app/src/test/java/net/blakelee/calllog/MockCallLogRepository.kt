@@ -3,11 +3,13 @@ package net.blakelee.calllog
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import net.blakelee.calllog.models.CallDetails
+import net.blakelee.calllog.models.CallLog
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
-class MockCallLogRepository : CallLogInterface {
+class MockCallLogRepository : CallLog {
 
     override fun observeCallLog(): Observable<List<CallDetails>> {
         return Observable.create { emitter ->

@@ -1,8 +1,8 @@
-package net.blakelee.calllog
+package net.blakelee.calllog.models
 
 import io.reactivex.Observable
 
-interface CallLogInterface {
+interface CallLog {
     fun observeCallLog(): Observable<List<CallDetails>>
 }
 

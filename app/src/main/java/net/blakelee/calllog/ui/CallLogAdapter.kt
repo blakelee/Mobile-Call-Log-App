@@ -1,4 +1,4 @@
-package net.blakelee.calllog
+package net.blakelee.calllog.ui
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_call_details.view.*
+import net.blakelee.calllog.models.CallDetails
+import net.blakelee.calllog.R
 
 class CallLogAdapter : RecyclerView.Adapter<CallLogAdapter.CallLogViewHolder>() {
 
