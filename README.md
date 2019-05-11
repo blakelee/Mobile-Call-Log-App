@@ -25,16 +25,16 @@ ConstraintLayout because it's recommended over RelativeLayout, more versatile, a
 I am happy with the reactive result seen in CallLogRepository but testing it is a nightmare so I chose not to.
 
 If I really wanted to make it slick, whenever a new call log item popped up, instead of getting the whole list,
-I could just get the most recent item and put it in the recyclerview. That way I can have the animation of the new
-item being inserted.
+I could just get the most recent item and put it in the recyclerview. That way I can have the animation of the
+new item being inserted.
 
-If the app wasn't so tied to BrodcastReceiver and the ContentResolver, I would have a separate module called model
-and would stick everything non-Android related in there such as anything dealing with REST API's. By doing that we
-can't accidentally use any Android stuff in places we're not supposed to and it also will speed up compile time if
-you only change stuff in the app module and not the model module.
+If the app wasn't so tied to BrodcastReceiver and the ContentResolver, I would have a separate module called
+model and would stick everything non-Android related in there such as anything dealing with REST API's. By doing
+that we can't accidentally use any Android stuff in places we're not supposed to and it also will speed up
+compile time if you only change stuff in the app module and not the model module.
 
-As far as dependency injection goes, it's there, but it's not using any fancy libraries. I would try Koin if I had
-more time.
+As far as dependency injection goes, it's there, but it's not using any fancy libraries. I would try Koin if I
+had more time.
 ```
 
 * What are some key architecture considerations?
